@@ -5,7 +5,8 @@ Minha trilha de 12 meses para me tornar especialista em IA: história → teoria
 - **Plano completo:** [`PLANO.md`](PLANO.md)
 - **Regras de organização (e instruções para o Claude):** [`CLAUDE.md`](CLAUDE.md)
 - **Modelos:** [`templates/`](templates/) para experimento, ficha de paper, avaliação e nota
-- **Painel:** https://edilsonss123.github.io/ai-learning/, atualizado sozinho a cada `git push`
+- **Cronograma (documento no Claude):** https://claude.ai/artifact/8385xjtBZqTsr5ie7Qw8yK
+- **Painel de progresso (artefato no Claude):** https://claude.ai/artifact/Bo1xRAdw4wwQGoLKdHxULh, atualizado quando você pede ao Claude "atualize meu progresso"
 
 ## Como funciona
 
@@ -47,7 +48,7 @@ A cada push, a Action roda `build_progress.py`, que:
 3. Ajuste `"inicio"` em `trilha.json` para o dia em que você começar.
 4. O painel fica em `https://SEU_USUARIO.github.io/ai-learning/`.
 
-Se o repositório for privado, o GitHub Pages exige plano pago (Pro). Alternativa: mantenha público, ou veja o painel localmente (abaixo).
+**Repositório privado (situação atual):** o GitHub Pages está desligado, porque no plano gratuito ele só publica repositórios públicos. O workflow `painel.yml` roda só manualmente. O painel fica no artefato do Claude (link acima) ou localmente. Para voltar ao Pages: torne o repositório público (ou assine o Pro) e reative o gatilho `push` no workflow.
 
 ## Rotina
 

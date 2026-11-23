@@ -1,7 +1,14 @@
 # CLAUDE.md
 
 Este repositório é a trilha de estudos de IA do Edilson: 12 meses, 8 fases, 8–10 h por semana.
-O plano completo está em [`PLANO.md`](PLANO.md). O progresso é medido pelos `PROGRESSO.md` de cada fase e publicado no painel do GitHub Pages (`https://edilsonss123.github.io/ai-learning/`).
+O plano completo está em [`PLANO.md`](PLANO.md). O progresso é medido pelos `PROGRESSO.md` de cada fase.
+
+O repositório é **privado**. Links no Claude:
+
+| Artefato | Link | Slug |
+| --- | --- | --- |
+| Cronograma (documento Claude Docs) | https://claude.ai/artifact/8385xjtBZqTsr5ie7Qw8yK | `38fbd324-8431-4065-91d6-7ecf08d5c71e` |
+| Painel de progresso (página HTML) | https://claude.ai/artifact/Bo1xRAdw4wwQGoLKdHxULh | `57683058-0057-4c81-b29e-fab1e573d95a` |
 
 Responda sempre em português do Brasil, de forma concisa e direta.
 
@@ -13,7 +20,9 @@ Aqui o Claude é **tutor**, não quem resolve os exercícios.
 - Revise código, explique erros, questione resultados e sugira experimentos.
 - Exercícios marcados como "do zero" usam só Python puro e NumPy (PyTorch básico a partir da Fase 5). Não sugira bibliotecas de alto nível nesses casos.
 - **Nunca marque `[x]` num `PROGRESSO.md` sem confirmação explícita do Edilson.** Você pode propor quais itens parecem concluídos, citando a evidência (arquivo ou commit).
-- Para "atualize meu progresso": leia os `PROGRESSO.md`, os commits recentes e os arquivos de cada fase. Rode `python scripts/build_progress.py` e resuma o que mudou, qual é a fase atual e o que falta para a avaliação.
+- Para "atualize meu progresso": leia os `PROGRESSO.md`, os commits recentes e os arquivos de cada fase. Rode `python scripts/build_progress.py` e resuma o que mudou, qual é a fase atual e o que falta para a avaliação. Depois:
+  1. **Painel**: copie `site/index.html` trocando `const EMBED = null;` por `const EMBED = <conteúdo de site/progress.json>;` (cada `<` escrito como `\u003c`) e republique no artefato do painel (slug acima), substituindo o `index.html`.
+  2. **Cronograma**: no documento do cronograma, marque os mesmos itens `[x]` que estão marcados nos `PROGRESSO.md` (o texto dos itens é o mesmo nos dois). Não altere outros textos do documento.
 - Nada de dados pessoais reais (LGPD). Datasets do domínio de dívidas são sempre sintéticos ou públicos.
 
 ## Estrutura
@@ -86,6 +95,7 @@ ai-learning/
 
 ## Painel
 
-- A cada push na `main`, `.github/workflows/painel.yml` roda `scripts/build_progress.py` e publica `site/` no GitHub Pages.
+- Com o repositório privado, o GitHub Pages fica desligado: `.github/workflows/painel.yml` só roda manualmente (`workflow_dispatch`). O painel é o artefato do Claude, atualizado como descrito em "Papel do Claude".
+- Se o repositório voltar a ser público (ou com GitHub Pro), reative o gatilho `push` no workflow para publicar `site/` no Pages a cada push.
 - `trilha.json` define `inicio` (data de início) e as fases. Mude `inicio` se recomeçar; não mude `pasta` sem renomear a pasta junto.
 - Ver localmente: `python scripts/build_progress.py && python -m http.server -d site 8000`.

@@ -1,8 +1,10 @@
 name: Painel de progresso
 
+# Repositório privado: GitHub Pages desligado no plano gratuito.
+# Para publicar a cada push (repo público ou GitHub Pro), descomente as 2 linhas de "push".
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 permissions:
