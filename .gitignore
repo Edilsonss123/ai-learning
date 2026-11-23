@@ -1,0 +1,7 @@
+site/progress.json
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+*.pt
+*.ckpt
+data/

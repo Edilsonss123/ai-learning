@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trilha de IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400;62..125,600;112,800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: painel de trabalho, sóbrio e direto, como quadro de horários.
+   IDEA: um quadro de partidas suíço — cada fase é uma linha com número enorme.
+   PICTURE: a linha do tempo de 12 meses com cada fase preenchida pelo progresso e a linha vermelha do "hoje".
+   COLOUR and TYPE: branco, preto, vermelho sinal, um cinza; Archivo largo 800 nos números.
+   LAYOUT: régua grossa no topo, números numa coluna larga à esquerda, fases empilhadas. */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0e0e0e);--ink:light-dark(#111,#f2f2f2);--mute:light-dark(#6b6b6b,#9a9a9a);--line:light-dark(#e3e3e3,#2a2a2a);--soft:light-dark(#f4f4f4,#1a1a1a);--red:#e4002b}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px);max-width:1240px;margin:0 auto}
+header.band{border-top:10px solid var(--ink);padding-bottom:12px}
+h1{font:800 clamp(32px,5vw,52px)/1.05 Archivo,system-ui,sans-serif;font-stretch:112%;margin:0 0 6px;text-wrap:balance}
+h2{font:800 22px/1.2 Archivo,system-ui,sans-serif;font-stretch:112%;margin:0 0 14px}
+.lead{color:var(--mute);margin:0}
+.lead b{color:var(--ink)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border-top:2px solid var(--ink);margin-top:24px}
+.kpi{padding:14px 16px 12px 0;border-bottom:1px solid var(--line)}
+.kpi .v{font:800 clamp(30px,4vw,44px)/1 Archivo,system-ui,sans-serif;font-stretch:112%;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi .l{font-size:13px;color:var(--mute)}
+.kpi.alert .v{color:var(--red)}
+.fig{position:relative;height:330px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+.strip{position:relative;height:64px}.strip>svg{position:absolute;inset:0;width:100%;height:100%}
+.note{font-size:13px;color:var(--mute);margin:8px 0 0}
+.banner{background:var(--soft);border-left:4px solid var(--red);padding:10px 14px;font-size:14px;margin-top:16px}
+.fase{display:grid;grid-template-columns:clamp(64px,10vw,120px) minmax(0,1fr);gap:0 20px;border-top:2px solid var(--ink);padding:18px 0}
+.fase .num{font:800 clamp(52px,8vw,96px)/.9 Archivo,system-ui,sans-serif;font-stretch:112%;font-variant-numeric:tabular-nums}
+.fase.done .num{color:var(--mute)}
+.fase.now .num{color:var(--red)}
+.fase h3{font:600 19px/1.25 Archivo,system-ui,sans-serif;margin:2px 0 2px}
+.meta{font-size:13px;color:var(--mute);display:flex;flex-wrap:wrap;gap:4px 14px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border:1.5px solid currentColor;border-radius:99px;white-space:nowrap}
+.tag.now{color:var(--red)}.tag.done{color:var(--mute)}
+.bars{display:grid;gap:6px;margin:12px 0 10px;max-width:560px}
+.bar{display:grid;grid-template-columns:8.5em minmax(0,1fr) 3.5em;align-items:center;gap:10px;font-size:13px}
+.track{height:10px;background:var(--soft);border-radius:5px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--ink);border-radius:5px}
+.bar.o .track i{background:var(--red)}
+.bar span:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.caps{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 6px}
+.cap{font-size:13px;padding:4px 10px;border-radius:6px;background:var(--soft);color:var(--mute)}
+.cap.ok{background:var(--ink);color:var(--bg)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600;font-size:14px;min-height:44px;display:flex;align-items:center;gap:8px}
+summary:focus-visible,button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px 28px;padding-bottom:8px}
+.cols h4{font:600 13px/1.3 Archivo,system-ui,sans-serif;color:var(--mute);margin:8px 0 6px}
+ul.items{list-style:none;padding:0;margin:0;font-size:14px}
+ul.items li{display:grid;grid-template-columns:1.4em auto minmax(0,1fr);gap:4px;padding:3px 0;border-bottom:1px solid var(--line)}
+ul.items li.ok{color:var(--mute)}
+ul.items .lv{min-width:1.8em;padding-right:6px;font-size:11px;font-weight:600;color:var(--mute);padding-top:2px}
+ul.log{list-style:none;padding:0;margin:0;font-size:14px}
+ul.log li{display:grid;grid-template-columns:6.2em minmax(0,1fr);gap:8px;padding:3px 0;border-bottom:1px solid var(--line)}
+ul.log time{color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+a{color:inherit;text-underline-offset:3px}
+.edit{font-size:13px}
+.empty{color:var(--mute);font-size:14px;margin:0}
+textarea{width:100%;min-height:120px;font:13px/1.4 ui-monospace,monospace;background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px}
+button{font:600 15px Archivo,system-ui,sans-serif;min-height:44px;padding:0 18px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:6px;cursor:pointer;margin-top:8px}
+footer.band{color:var(--mute);font-size:13px;border-top:1px solid var(--line)}
+@media(max-width:600px){.bar{grid-template-columns:8.4em minmax(0,1fr) 2.6em;gap:8px}.fig{height:300px}}
+@media(prefers-reduced-motion:no-preference){.track i{transition:width .6s ease}}
+</style>
+</head>
+<body>
+<header class="band">
+  <h1 id="titulo">Trilha de IA</h1>
+  <p class="lead" id="lead">Carregando o progresso do repositório…</p>
+  <div class="kpis" id="kpis"></div>
+  <div id="aviso"></div>
+</header>
+
+<section class="band" aria-labelledby="h-linha">
+  <h2 id="h-linha">Plano × progresso</h2>
+  <div class="fig" id="fig" role="img" aria-label="Linha do tempo de 12 meses com o progresso de cada fase"><svg id="figsvg"></svg></div>
+  <p class="note">Cada barra ocupa os meses planejados da fase; a parte preenchida é a fração de itens obrigatórios concluídos. A linha vermelha é a semana de hoje.</p>
+</section>
+
+<section class="band" aria-labelledby="h-ritmo">
+  <h2 id="h-ritmo">Ritmo: commits por semana</h2>
+  <div class="strip"><svg id="stripsvg"></svg></div>
+  <p class="note" id="ritmo-nota"></p>
+</section>
+
+<section class="band" aria-labelledby="h-fases">
+  <h2 id="h-fases">Fases</h2>
+  <div id="fases"></div>
+</section>
+
+<section class="band" aria-labelledby="h-commits">
+  <h2 id="h-commits">Últimos commits</h2>
+  <ul class="log" id="commits"></ul>
+</section>
+
+<footer class="band">
+  <p id="gerado"></p>
+  <details>
+    <summary>Carregar outro progress.json</summary>
+    <p class="note">Cole aqui o conteúdo de <code>site/progress.json</code> gerado por <code>python scripts/build_progress.py</code>.</p>
+    <textarea id="colar" aria-label="Conteúdo do progress.json"></textarea>
+    <button id="usar" type="button">Usar estes dados</button>
+    <p class="note" id="colar-erro" role="status"></p>
+  </details>
+</footer>
+
+<script>
+const EMBED = null;
+{
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+const fmtData = iso => { const d = String(iso).slice(0, 10).split('-'); return d.length === 3 ? `${d[2]}/${d[1]}/${d[0].slice(2)}` : ''; };
+const DIA = 864e5;
+let D = null;
+
+function resumo(f) {
+  const todos = Object.entries(f.secoes || {});
+  const aval = todos.filter(([k]) => /^avalia/i.test(k)).flatMap(([, v]) => v);
+  const itens = todos.filter(([k]) => !/^avalia/i.test(k)).flatMap(([, v]) => v);
+  const por = nv => { const l = itens.filter(i => i.nivel.toUpperCase() === nv); return {f: l.filter(i => i.feito).length, t: l.length}; };
+  const o = por('O'), c = por('C'), a = por('A');
+  const av = {f: aval.filter(i => i.feito).length, t: aval.length};
+  const concluida = o.t > 0 && o.f === o.t && av.t > 0 && av.f === av.t;
+  const iniciada = concluida || o.f + c.f + a.f + av.f > 0 || (f.arquivos || []).length > 0 || (f.diario || []).length > 0;
+  return {o, c, a, av, aval, itens, concluida, iniciada};
+}
+
+function semanaAtual() {
+  if (!D.inicio) return null;
+  const dias = Math.floor((Date.now() - Date.parse(D.inicio)) / DIA);
+  return {dias, semana: Math.floor(dias / 7) + 1, mes: Math.floor(dias / 30.44) + 1};
+}
+
+function render() {
+  const fases = D.fases.map(f => ({...f, r: resumo(f)}));
+  const atual = fases.find(f => !f.r.concluida) || fases.at(-1);
+  const tot = fases.reduce((s, f) => ({f: s.f + f.r.o.f, t: s.t + f.r.o.t}), {f: 0, t: 0});
+  const aprov = fases.filter(f => f.r.concluida).length;
+  const commitsTot = fases.reduce((s, f) => s + (f.total_commits || 0), 0);
+  const sa = semanaAtual();
+  const planejada = sa ? fases.find(f => sa.mes >= f.meses[0] && sa.mes <= f.meses[1]) : null;
+  let ritmo = '—', atrasado = false;
+  if (sa && sa.dias < 0) ritmo = 'ainda não começou';
+  else if (planejada) {
+    const dif = atual.n - planejada.n;
+    ritmo = dif === 0 ? 'no prazo' : dif > 0 ? `${dif} fase${dif > 1 ? 's' : ''} adiantado` : `${-dif} fase${dif < -1 ? 's' : ''} atrasado`;
+    atrasado = dif < 0;
+  } else if (sa && sa.mes > 12) ritmo = 'prazo de 12 meses encerrado';
+
+  $('titulo').textContent = atual.r.concluida ? 'Trilha concluída' : `Fase ${atual.n}: ${atual.titulo}`;
+  $('lead').innerHTML = `<b>${pct(tot.f, tot.t)}%</b> dos itens obrigatórios da trilha concluídos · ${esc(ritmo)}` +
+    (sa && sa.dias >= 0 ? ` · semana ${sa.semana} de 52` : '');
+  $('kpis').innerHTML = [
+    [`${pct(tot.f, tot.t)}%`, `obrigatórios (${tot.f} de ${tot.t})`],
+    [`${pct(atual.r.o.f, atual.r.o.t)}%`, `da fase ${atual.n} atual`],
+    [`${aprov}/${fases.length}`, 'avaliações aprovadas'],
+    [String(commitsTot), 'commits nas fases'],
+    [esc(ritmo), planejada ? `plano indica a fase ${planejada.n}` : 'em relação ao plano', atrasado]
+  ].map(([v, l, al]) => `<div class="kpi${al ? ' alert' : ''}"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join('');
+
+  const repo = /^https:\/\//.test(D.repo || '') ? D.repo : '';
+  $('fases').innerHTML = fases.map(f => {
+    const r = f.r, st = r.concluida ? 'done' : f === atual ? 'now' : '';
+    const status = r.concluida ? '<span class="tag done">concluída</span>' : f === atual ? '<span class="tag now">em andamento</span>' : r.iniciada ? '<span class="tag">iniciada</span>' : '';
+    const bar = (cls, nome, x) => x.t ? `<div class="bar ${cls}"><span>${nome}</span><div class="track"><i style="width:${pct(x.f, x.t)}%"></i></div><span>${x.f}/${x.t}</span></div>` : '';
+    const caps = ['Explicar', 'Implementar', 'Analisar'].map(cp => {
+      const it = r.aval.find(i => i.nivel.toLowerCase() === cp.toLowerCase());
+      return `<span class="cap${it && it.feito ? ' ok' : ''}" title="${esc(it ? it.texto : '')}">${it && it.feito ? '✓ ' : ''}${cp}</span>`;
+    }).join('');
+    const ult = (f.commits || [])[0];
+    const lista = Object.entries(f.secoes || {}).map(([sec, its]) => `<h4>${esc(sec)}</h4><ul class="items">${its.map(i =>
+      `<li class="${i.feito ? 'ok' : ''}"><span>${i.feito ? '✓' : '○'}</span><span class="lv">${esc(i.nivel)}</span><span>${esc(i.texto)}</span></li>`).join('')}</ul>`).join('');
+    const diario = (f.diario || []).length ? `<ul class="log">${f.diario.slice(0, 12).map(d => `<li><time>${fmtData(d.data)}</time><span>${esc(d.texto)}</span></li>`).join('')}</ul>` : '<p class="empty">Nenhuma entrada no diário ainda.</p>';
+    const cms = (f.commits || []).length ? `<ul class="log">${f.commits.slice(0, 10).map(c => `<li><time>${fmtData(c.data)}</time><span>${repo ? `<a href="${esc(repo)}/commit/${esc(c.hash)}">${esc(c.msg)}</a>` : esc(c.msg)}</span></li>`).join('')}</ul>` : '<p class="empty">Nenhum commit nesta pasta ainda.</p>';
+    const arqs = (f.arquivos || []).length ? `<ul class="log">${f.arquivos.slice(0, 15).map(a => `<li><time>arquivo</time><span>${repo ? `<a href="${esc(repo)}/blob/HEAD/${esc(f.pasta)}/${esc(a)}">${esc(a)}</a>` : esc(a)}</span></li>`).join('')}</ul>` : '<p class="empty">Nenhum arquivo além do PROGRESSO.md.</p>';
+    return `<article class="fase ${st}" id="fase-${f.n}"><div class="num">${f.n}</div><div>
+      <h3>${esc(f.titulo)}</h3>
+      <div class="meta">${status}<span>${f.meses[0] === f.meses[1] ? `mês ${f.meses[0]}` : `meses ${f.meses[0]}–${f.meses[1]}`}</span><span>${f.total_commits || 0} commits</span>${ult ? `<span>último: ${fmtData(ult.data)}</span>` : ''}${f.tem_experimento ? '<span>EXPERIMENTO.md ✓</span>' : ''}</div>
+      <div class="bars">${bar('o', 'Obrigatórios', r.o)}${bar('', 'Complementares', r.c)}${bar('', 'Avançados', r.a)}</div>
+      <div class="caps" aria-label="Avaliação da fase">${caps}</div>
+      <details><summary>Itens, diário e commits</summary><div class="cols">
+        <div>${lista}${repo ? `<p class="edit"><a href="${esc(repo)}/edit/HEAD/${esc(f.pasta)}/PROGRESSO.md">Editar PROGRESSO.md no GitHub</a></p>` : ''}</div>
+        <div><h4>O que estudei (diário)</h4>${diario}<h4>Commits</h4>${cms}<h4>Arquivos</h4>${arqs}</div>
+      </div></details></div></article>`;
+  }).join('');
+
+  $('commits').innerHTML = (D.ultimos_commits || []).length ? D.ultimos_commits.map(c =>
+    `<li><time>${fmtData(c.data)}</time><span>${repo ? `<a href="${esc(repo)}/commit/${esc(c.hash)}">${esc(c.msg)}</a>` : esc(c.msg)}</span></li>`).join('') : '<li><span></span><span class="empty">Nenhum commit ainda.</span></li>';
+  $('gerado').textContent = `Dados gerados em ${fmtData(D.gerado_em)}${repo ? ' · ' + repo : ''}`;
+  ultimo = {fases, atual, sa};
+  redesenhar();
+}
+
+let ultimo = null;
+function redesenhar() { if (ultimo) { drawFig(ultimo.fases, ultimo.atual, ultimo.sa); drawStrip(ultimo.sa); } }
+
+function drawFig(fases, atual, sa) {
+  const s = $('figsvg'), W = s.clientWidth, H = s.clientHeight;
+  if (!W) return;
+  const estreito = W < 520, L = estreito ? 30 : 230, R = 12, T = 30, rowH = (H - T - 10) / fases.length;
+  const X = m => L + (m - 1) * (W - L - R) / 12;
+  let g = '';
+  for (let m = 1; m <= 13; m++) g += `<line x1="${X(m)}" x2="${X(m)}" y1="${T - 6}" y2="${H - 6}" stroke="var(--line)"/>`;
+  for (let m = 1; m <= 12; m++) if (!estreito || m % 2) g += `<text x="${(X(m) + X(m + 1)) / 2}" y="${T - 12}" text-anchor="middle" font-size="12" fill="var(--mute)">${m}</text>`;
+  fases.forEach((f, i) => {
+    const y = T + i * rowH + rowH / 2, x0 = X(f.meses[0]) + 2, w = X(f.meses[1] + 1) - X(f.meses[0]) - 4, p = f.r.o.t ? f.r.o.f / f.r.o.t : 0;
+    const cor = f === atual && !f.r.concluida ? 'var(--red)' : 'var(--ink)';
+    g += `<rect x="${x0}" y="${y - 9}" width="${w}" height="18" rx="4" fill="var(--soft)" stroke="${cor}" stroke-width="1.5"/>`;
+    g += `<rect x="${x0}" y="${y - 9}" width="${w * p}" height="18" rx="4" fill="${cor}"/>`;
+    g += `<text x="${estreito ? 4 : 0}" y="${y + 5}" font-size="${estreito ? 14 : 14}" font-weight="${f === atual ? 700 : 400}" fill="var(--ink)">${estreito ? f.n : esc(f.n + ' · ' + (f.curto || f.titulo).slice(0, 28))}</text>`;
+  });
+  if (sa && sa.dias >= 0 && sa.dias <= 366) {
+    const xh = L + Math.min(sa.dias / 365, 1) * (W - L - R);
+    g += `<line x1="${xh}" x2="${xh}" y1="${T - 6}" y2="${H - 6}" stroke="var(--red)" stroke-width="2"/><text x="${Math.min(xh + 4, W - 34)}" y="${H - 10}" font-size="12" font-weight="700" fill="var(--red)">hoje</text>`;
+  }
+  s.innerHTML = g;
+}
+
+function drawStrip(sa) {
+  const s = $('stripsvg'), W = s.clientWidth, H = s.clientHeight;
+  if (!W) return;
+  const ini = D.inicio ? Date.parse(D.inicio) : Date.now() - 51 * 7 * DIA;
+  const seg = t => { const d = new Date(t); const w = (d.getUTCDay() + 6) % 7; return new Date(t - w * DIA).toISOString().slice(0, 10); };
+  const cw = D.commits_por_semana || {};
+  const n = 52, bw = W / n, max = Math.max(1, ...Object.values(cw));
+  let g = '', ativas = 0;
+  for (let i = 0; i < n; i++) {
+    const k = seg(ini + i * 7 * DIA), v = cw[k] || 0, h = v ? 6 + (H - 22) * v / max : 2;
+    if (v) ativas++;
+    const futura = sa && i + 1 > sa.semana;
+    g += `<rect x="${i * bw + 1}" y="${H - 16 - h}" width="${Math.max(bw - 2, 1)}" height="${h}" fill="${v ? 'var(--ink)' : futura ? 'var(--soft)' : 'var(--line)'}"><title>Semana de ${fmtData(k)}: ${v} commits</title></rect>`;
+  }
+  g += `<text x="0" y="${H - 2}" font-size="12" fill="var(--mute)">semana 1</text><text x="${W}" y="${H - 2}" font-size="12" text-anchor="end" fill="var(--mute)">semana 52</text>`;
+  s.innerHTML = g;
+  const passadas = sa ? Math.max(0, Math.min(sa.semana, 52)) : 0;
+  $('ritmo-nota').textContent = passadas ? `Commits em ${ativas} de ${passadas} semanas desde o início (${fmtData(D.inicio)}).` : 'A contagem começa na data de início em trilha.json.';
+}
+
+function usar(dados, aviso) {
+  if (!dados || !Array.isArray(dados.fases)) throw new Error('JSON sem a lista "fases".');
+  D = dados; render();
+  $('aviso').innerHTML = aviso ? `<div class="banner">${aviso}</div>` : '';
+}
+
+const figObs = new ResizeObserver(() => redesenhar());
+figObs.observe($('fig'));
+
+$('usar').addEventListener('click', () => {
+  try { usar(JSON.parse($('colar').value), 'Mostrando os dados colados.'); $('colar-erro').textContent = ''; }
+  catch (e) { $('colar-erro').textContent = 'Não consegui ler: ' + e.message; }
+});
+
+fetch('progress.json', {cache: 'no-store'}).then(r => { if (!r.ok) throw 0; return r.json(); })
+  .then(d => usar(d, ''))
+  .catch(() => {
+    if (EMBED) usar(EMBED, 'Prévia com <b>dados de exemplo</b>. No seu GitHub Pages este painel lê o <code>progress.json</code> gerado do seu repositório a cada push.');
+    else { $('lead').textContent = 'Não encontrei progress.json. Rode python scripts/build_progress.py ou cole o JSON no rodapé.'; }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{
+  "inicio": "2026-12-01",
+  "horas_semana": 8,
+  "fases": [
+    {
+      "pasta": "01-historia",
+      "n": 1,
+      "titulo": "História da IA, primeiros modelos e fracassos",
+      "meses": [
+        1,
+        1
+      ],
+      "curto": "História e fracassos"
+    },
+    {
+      "pasta": "02-ia-classica",
+      "n": 2,
+      "titulo": "IA clássica: lógica, busca, sistemas especialistas e RL",
+      "meses": [
+        2,
+        2
+      ],
+      "curto": "IA clássica e RL"
+    },
+    {
+      "pasta": "03-matematica",
+      "n": 3,
+      "titulo": "Matemática para IA",
+      "meses": [
+        3,
+        4
+      ],
+      "curto": "Matemática"
+    },
+    {
+      "pasta": "04-ml-classico",
+      "n": 4,
+      "titulo": "Machine learning clássico",
+      "meses": [
+        5,
+        5
+      ],
+      "curto": "ML clássico"
+    },
+    {
+      "pasta": "05-deep-learning",
+      "n": 5,
+      "titulo": "Redes neurais e deep learning",
+      "meses": [
+        6,
+        7
+      ],
+      "curto": "Deep learning"
+    },
+    {
+      "pasta": "06-transformers",
+      "n": 6,
+      "titulo": "Transformers e LLMs por dentro",
+      "meses": [
+        8,
+        9
+      ],
+      "curto": "Transformers e LLMs"
+    },
+    {
+      "pasta": "07-aplicacao",
+      "n": 7,
+      "titulo": "Pós-treino, RAG, agentes e produção",
+      "meses": [
+        10,
+        11
+      ],
+      "curto": "RAG, agentes, produção"
+    },
+    {
+      "pasta": "08-projeto-final",
+      "n": 8,
+      "titulo": "Projeto final e reprodução de paper",
+      "meses": [
+        12,
+        12
+      ],
+      "curto": "Projeto final"
+    }
+  ]
+}
