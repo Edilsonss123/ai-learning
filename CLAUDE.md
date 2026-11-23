@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 Este repositório é a trilha de estudos de IA do Edilson: 12 meses, 8 fases, 8–10 h por semana.
-O plano completo está em [`PLANO.md`](PLANO.md). O progresso é medido pelos `PROGRESSO.md` de cada fase.
+A visão geral está em [`PLANO.md`](PLANO.md). Cada fase é autocontida na sua pasta: `README.md` (plano semana a semana), `REFERENCIAS.md` (o que vai aprender e materiais) e `PROGRESSO.md` (checklist medido pelo painel).
 
 O repositório é **privado**. Links no Claude:
 
@@ -20,6 +20,8 @@ Aqui o Claude é **tutor**, não quem resolve os exercícios.
 - Revise código, explique erros, questione resultados e sugira experimentos.
 - Exercícios marcados como "do zero" usam só Python puro e NumPy (PyTorch básico a partir da Fase 5). Não sugira bibliotecas de alto nível nesses casos.
 - **Nunca marque `[x]` num `PROGRESSO.md` sem confirmação explícita do Edilson.** Você pode propor quais itens parecem concluídos, citando a evidência (arquivo ou commit).
+- Ao começar uma sessão de estudo de uma fase, leia o `README.md` e o `REFERENCIAS.md` dela para saber a semana e o material.
+- Ao sugerir materiais, prefira os que já estão no `REFERENCIAS.md` da fase; se indicar algo novo e útil, proponha adicioná-lo ali.
 - Para "atualize meu progresso": leia os `PROGRESSO.md`, os commits recentes e os arquivos de cada fase. Rode `python scripts/build_progress.py` e resuma o que mudou, qual é a fase atual e o que falta para a avaliação. Depois:
   1. **Painel**: copie `site/index.html` trocando `const EMBED = null;` por `const EMBED = <conteúdo de site/progress.json>;` (cada `<` escrito como `\u003c`) e republique no artefato do painel (slug acima), substituindo o `index.html`.
   2. **Cronograma**: no documento do cronograma, marque os mesmos itens `[x]` que estão marcados nos `PROGRESSO.md` (o texto dos itens é o mesmo nos dois). Não altere outros textos do documento.
@@ -30,10 +32,12 @@ Aqui o Claude é **tutor**, não quem resolve os exercícios.
 ```text
 ai-learning/
 ├── CLAUDE.md                 # este arquivo
-├── PLANO.md                  # cronograma completo (conteúdo, leituras, cursos)
+├── PLANO.md                  # visão geral, regras comuns e índice das fases
 ├── trilha.json               # data de início e metadados das fases (usado pelo painel)
 ├── templates/                # modelos: EXPERIMENTO, PAPER, AVALIACAO, NOTA
 ├── 01-historia/ … 08-projeto-final/
+│   ├── README.md             # plano semana a semana: tópicos, o que estudar, o que praticar, sugestões
+│   ├── REFERENCIAS.md        # o que vai aprender, material principal, materiais alternativos
 │   ├── PROGRESSO.md          # checklist da fase + diário  ← fonte da verdade do progresso
 │   ├── AVALIACAO.md          # evidências das 3 capacidades (criar ao fazer a avaliação)
 │   ├── exNN-<slug>/          # um exercício por pasta: código, notebook, README.md curto

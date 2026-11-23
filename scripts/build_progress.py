@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "site" / "progress.json"
 CHECK = re.compile(r"^\s*[-*]\s+\[( |x|X)\]\s+(?:\[([^\]]+)\]\s+)?(.+?)\s*$")
+GUIAS = {"PROGRESSO.md", "README.md", "REFERENCIAS.md"}
 DIARIO = re.compile(r"^\s*[-*]\s+(\d{4}-\d{2}-\d{2})\s*[:\-–]\s*(.+?)\s*$")
 
 
@@ -81,7 +82,7 @@ def main():
         cs = commits(f["pasta"])
         arquivos = sorted(
             str(p.relative_to(pasta)).replace("\\", "/")
-            for p in pasta.rglob("*") if p.is_file() and p.name != "PROGRESSO.md"
+            for p in pasta.rglob("*") if p.is_file() and p.name not in GUIAS
         ) if pasta.exists() else []
         fases.append({**f, "secoes": secoes, "diario": sorted(diario, key=lambda d: d["data"], reverse=True),
                       "commits": cs[:30], "total_commits": len(cs), "arquivos": arquivos[:60],
