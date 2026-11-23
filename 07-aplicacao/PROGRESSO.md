@@ -2,7 +2,7 @@
 
 Meses 10–11.
 
-Marque `[x]` ao concluir e faça commit. O painel lê este arquivo.
+Marque `[x]` ao concluir, com link para a evidência, e faça commit. Regras em [CLAUDE.md](../CLAUDE.md); conteúdo da fase em [PLANO.md](../PLANO.md).
 
 ## Exercícios
 

@@ -2,12 +2,18 @@
 
 Minha trilha de 12 meses para me tornar especialista em IA: história → teoria → matemática → implementação → experimentação → aplicação real.
 
-O painel de progresso fica em **GitHub Pages** e é atualizado sozinho a cada `git push`.
+- **Plano completo:** [`PLANO.md`](PLANO.md)
+- **Regras de organização (e instruções para o Claude):** [`CLAUDE.md`](CLAUDE.md)
+- **Modelos:** [`templates/`](templates/) para experimento, ficha de paper, avaliação e nota
+- **Painel:** https://edilsonss123.github.io/ai-learning/, atualizado sozinho a cada `git push`
 
 ## Como funciona
 
 ```text
 ai-learning/
+├── PLANO.md                 # cronograma completo
+├── CLAUDE.md                # onde guardar cada coisa + papel do Claude
+├── templates/               # EXPERIMENTO, PAPER, AVALIACAO, NOTA
 ├── trilha.json              # data de início e fases (edite "inicio")
 ├── 01-historia/
 │   ├── PROGRESSO.md         # checklist da fase + diário de estudo
