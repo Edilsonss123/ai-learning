@@ -261,7 +261,7 @@ $('usar').addEventListener('click', () => {
 fetch('progress.json', {cache: 'no-store'}).then(r => { if (!r.ok) throw 0; return r.json(); })
   .then(d => usar(d, ''))
   .catch(() => {
-    if (EMBED) usar(EMBED, 'Prévia com <b>dados de exemplo</b>. No seu GitHub Pages este painel lê o <code>progress.json</code> gerado do seu repositório a cada push.');
+    if (EMBED) usar(EMBED, `Retrato do repositório em ${fmtData(EMBED.gerado_em)}. Para atualizar, peça ao Claude: <b>atualize meu progresso</b>.`);
     else { $('lead').textContent = 'Não encontrei progress.json. Rode python scripts/build_progress.py ou cole o JSON no rodapé.'; }
   });
 }
